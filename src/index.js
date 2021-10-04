@@ -1,13 +1,20 @@
 // Importing Lib
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const { readdirSync } = require('fs');
 const { join } = require('path');
 
+// Loading the enviromentvariables
 dotenv.config();
 
+// Connecting to the dataabse
+mongoose.connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true });
+
+// Creating the client instance
 const client = new Discord.Client({
-    intents: ["GUILDS"]
+    intents: ["GUILDS","GUILD_MESSAGE_REACTIONS"],
+    partials: ["REACTION", "MESSAGE"]
 });
 
 client.commands = new Discord.Collection();
@@ -25,7 +32,6 @@ for (let i = 0; i < client.categories.length; i++) {
 
     for (let j = 0; j < commands.length; j++) {
         const command = require(`./commands/${client.categories[i]}/${commands[j]}`);
-
         if (!command || !command?.data?.name || typeof (command?.run) !== "function") continue;
 
         client.commands.set(command.data.name, command);
