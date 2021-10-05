@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, Message } = require("discord.js");
+const { Client, CommandInteraction, Message, MessageActionRow, MessageButton } = require("discord.js");
 const menus = require('../../models/reactionRole');
 
 module.exports = {
@@ -104,19 +104,26 @@ module.exports = {
             interaction.editReply({ content: `Role menu is deleted with name : \`${name}\`.` });
         } else if (option === "start") {
             if (channel.type !== "GUILD_TEXT" && channel.type !== "GUILD_NEWS") return interaction.editReply({ content: "Invalid channel was provided" });
+            if (menu.roles.length === 0) return interaction.editReply({ content: "This menu have 0 roles." });
 
-            let content = `Reaction Menu : **${menu.name}**\n\nReact to get yourself a role\n\n`;
+            let content = `Reaction Menu : **${menu.name}**\n\nReact to get yourself a role\n\n`, rows = [new MessageActionRow()], index;
 
-            menu.roles.forEach(v => {
-                content += `> ${interaction.guild.emojis.cache.get(v.emoji)?.toString() || v.emoji} : \`${interaction.guild.roles.cache.get(v.role).name}\`\n\n`
+            menu.roles.forEach((v, i) => {
+                content += `> ${interaction.guild.emojis.cache.get(v.emoji)?.toString() || v.emoji} : \`${interaction.guild.roles.cache.get(v.role).name}\`\n\n`;
+
+                index = parseInt(i / 5);
+                const button = new MessageButton({
+                    customId: `reaction_role_${i}`,
+                    style: "PRIMARY",
+                    emoji: v.emoji,
+                });
+
+                rows[index] ? rows[index].addComponents(button) : rows[index] = new MessageActionRow().addComponents(button)
             });
 
             const msg = await channel.send({
-                content
-            });
-
-            menu.roles.forEach(v => {
-                msg.react(v.emoji);
+                content,
+                components: rows
             });
 
             await menus.findOneAndUpdate({ name, guild: interaction.guildId }, { message: msg.id });
