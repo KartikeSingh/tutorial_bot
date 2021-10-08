@@ -1,15 +1,13 @@
 const { Schema, model } = require('mongoose');
 
-const RoleMenu = new Schema({
+const reactionRole = new Schema({
+    name: String,
     guild: String,
     message: String,
-    name: String,
-    roles: [
-        {
-            role: String,
-            emoji: String
-        }
-    ],
+    roles: [{
+        role: String,
+        emoji: String,
+    }]
 })
 
-module.exports = model("Reaction_Role", RoleMenu);
+module.exports = model("Reaction_Role_Menu", reactionRole);

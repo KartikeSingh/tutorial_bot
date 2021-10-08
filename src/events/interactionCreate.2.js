@@ -1,16 +1,9 @@
-const { ButtonInteraction, MessageButton } = require("discord.js");
 const reactionRole = require("../models/reactionRole");
 
-/**
- * 
- * @param {*} client 
- * @param {ButtonInteraction} interaction 
- * @returns 
- */
 module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 
-    const emoji = interaction.component.emoji;
+    const emoji = interaction?.component?.emoji;
 
     const menu = await reactionRole.findOne({ message: interaction.message.id });
 

@@ -1,14 +1,14 @@
 // Importing Lib
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { readdirSync } = require('fs');
 const { join } = require('path');
 
 // Loading the enviromentvariables
 dotenv.config();
 
-// Connecting to the dataabse
+// Connecting to mongoose
 mongoose.connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true });
 
 // Creating the client instance
