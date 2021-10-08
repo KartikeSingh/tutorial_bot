@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord-rock-paper-scissor": "^1.1.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "mongoose": "^6.0.9"
