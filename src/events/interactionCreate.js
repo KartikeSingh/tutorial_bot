@@ -1,11 +1,3 @@
-const { CommandInteraction } = require("discord.js");
-
-/**
- * 
- * @param {*} client 
- * @param {CommandInteraction} interaction 
- * @returns 
- */
 module.exports = async (client, interaction) => {
     if (!interaction.isCommand() && !interaction.isContextMenu()) return;
 

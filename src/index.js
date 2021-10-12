@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlPar
 
 // Creating the client instance
 const client = new Discord.Client({
-    intents: ["GUILDS", "GUILD_MESSAGE_REACTIONS"],
+    intents: ["GUILDS", "GUILD_MESSAGE_REACTIONS", "GUILD_MEMBERS"],
     partials: ["REACTION", "MESSAGE"]
 });
 
