@@ -38,4 +38,5 @@ for (let i = 0; i < client.categories.length; i++) {
     }
 }
 
+// Logging in the client!
 client.login(process.env.TOKEN);
