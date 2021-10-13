@@ -1,13 +1,6 @@
-const { GuildMember } = require('discord.js');
 const stats = require('../models/guildStats');
 
-/**
- * 
- * @param {*} client 
- * @param {GuildMember} member 
- * @returns 
- */
-module.exports = async (client, member) => {
+module.exports =async (client, member) => {
     const data = await stats.findOne({ guild: member.guild.id });
 
     if (!data || !data.members || data.members === "0") return;
@@ -16,5 +9,5 @@ module.exports = async (client, member) => {
 
     if (!channel || !channel.manageable) return;
 
-    channel.setName(`Members : ${member.guild.memberCount}`);
+    channel.setName(`Members : ${member.guild.memberCount}`)
 }

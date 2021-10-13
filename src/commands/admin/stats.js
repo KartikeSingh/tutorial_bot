@@ -1,10 +1,10 @@
+const { CommandInteraction } = require('discord.js');
 const stats = require('../../models/guildStats');
 
 module.exports = {
     data: {
         name: "stats",
-        description: "Setup stats for your server",
-        type: 1,
+        description: "Configure the stats for your server",
         options: [{
             name: "type",
             type: 3,
@@ -21,9 +21,17 @@ module.exports = {
             description: "The voice channel in which you wanna show the stats"
         }]
     },
+    permissions: ["MANAGE_SERVER", "MANAGE_CHANNELS"],
+
+    /**
+     * 
+     * @param {*} client 
+     * @param {CommandInteraction} interaction 
+     */
     run: async (client, interaction) => {
-        const channel = interaction.options.getChannel("channel", false) || await interaction.guild.channels.create(`Members : ${interaction.guild.memberCount}`, {
-            reason: "For stats",
+        interaction.deferReply();
+        const channel = interaction.options.getChannel("channel") || await interaction.guild.channels.create(`Members : ${interaction.guild.memberCount}`, {
+            reason: "for stats",
             type: "GUILD_VOICE"
         });
 
@@ -32,6 +40,6 @@ module.exports = {
 
         const data = await stats.findOneAndUpdate({ guild: interaction.guildId }, newData, { new: true }) || await stats.create(newData);
 
-        interaction.reply({ content: `Added stats for ${interaction.options.getString('type')}` });
+        interaction.editReply({ content: `Added stats for ${interaction.options.getString("type")}` });
     }
 }

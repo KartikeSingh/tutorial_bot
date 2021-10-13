@@ -6,6 +6,7 @@ module.exports = {
         description: "",
         type: 2,
     },
+    permissions: ["MANAGE_SERVER"],
 
     /**
      * 
