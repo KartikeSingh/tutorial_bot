@@ -1,11 +1,13 @@
 const tickets = require('../models/tickets');
 const ticket = require('../models/ticket');
-const { CommandInteraction } = require('discord.js');
+
 module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 
     const data = await tickets.findOne({ guild: interaction.guildId, message: interaction.message.id }),
         member = interaction.guild.members.cache.get(interaction.user.id);
+
+    if (!data) return;
 
     if (data.banned.some(v => member.roles.cache.has(v))) return interaction.reply({ content: "You are banned from the panel" });
 

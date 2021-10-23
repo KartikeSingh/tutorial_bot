@@ -10,10 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "canvacord": "^5.2.3",
     "canvas": "^2.8.0",
     "discord-rock-paper-scissor": "^1.1.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "mongoose": "^6.0.9"
+    "mongoose": "^6.0.9",
+    "pokecord": "^1.0.1"
   }
 }
