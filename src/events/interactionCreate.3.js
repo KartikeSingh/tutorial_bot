@@ -5,12 +5,12 @@ module.exports = async (client, interaction) => {
     if (!interaction.isButton()) return;
 
     const data = await tickets.findOne({ guild: interaction.guildId, message: interaction.message.id }),
-        member = interaction.guild.members.cache.get(interaction.user.id);
+        member = interaction.guild.members.cache.get(interaction.user.id), user_tickets = await ticket.find({ panel: data.name, user: interaction.user.id, closed:false }).lean();
 
     if (!data) return;
 
-    if (data.banned.some(v => member.roles.cache.has(v))) return interaction.reply({ content: "You are banned from the panel" });
-
+    if (data.banned.some(v => member.roles.cache.has(v))) return interaction.reply({ content: "You are banned from the panel", ephemeral: true });
+    if (user_tickets.length >= data.max) return interaction.reply({ content: "You already made maximum tickets `(" + data.max + ")` you are allowed to make in this panel", ephemeral: true });
 
     const overwrites = [{
         id: interaction.guild.roles.everyone.id,
@@ -24,7 +24,7 @@ module.exports = async (client, interaction) => {
 
     data.moderators.forEach(v => overwrites.push({ id: v, allow: ["VIEW_CHANNEL"], type: "role" }));
 
-    const channel = await interaction.guild.channels.create(`ticket-${data.index + 1}`, {
+    const channel = await interaction.guild.channels.create(`ticket - ${data.index + 1} `, {
         reason: "for ticket system",
         type: "GUILD_TEXT",
         permissionOverwrites: overwrites
@@ -33,6 +33,26 @@ module.exports = async (client, interaction) => {
     interaction.reply({ content: "ticket is created successfully", ephemeral: true });
     channel.send({ content: `${interaction.user.toString()}, stay patient staff will be arving soon.` });
 
+    interaction.guild.channels.cache.get(data.logs)?.send({
+        embeds: [{
+            title: "New ticket created",
+            timestamps: Date.now(),
+            fields: [{
+                name: "Panel",
+                value: data.name,
+                inline: true
+            }, {
+                name: "User",
+                value: interaction.user.username,
+                inline: true
+            }, {
+                name: "Ticket",
+                value: channel.toString(),
+                inline: true
+            }]
+        }]
+    })
+
     await tickets.findOneAndUpdate({ guild: interaction.guildId, message: interaction.message.id }, { $inc: { index: 1 } });
-    await ticket.create({ channel: channel.id, guild: interaction.guildId, user: interaction.user.id, panel: data.panel });
+    await ticket.create({ channel: channel.id, guild: interaction.guildId, user: interaction.user.id, panel: data.name });
 }

@@ -53,6 +53,106 @@ module.exports = {
             name: "delete",
             type: 1,
             description: "Delete a ticket for your discord server",
+        }, {
+            name: "logs-disable",
+            type: 1,
+            description: "Disable ticket logs for your server",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }]
+        }, {
+            name: "logs-enable",
+            type: 1,
+            description: "Enable ticket logs for your server",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "channel",
+                type: 7,
+                description: "channel to send ticket logs for your server",
+                required: true
+            }]
+        }, {
+            name: "moderator-add",
+            type: 1,
+            description: "Add a moderator role for your server's ticket panel",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "role",
+                type: 8,
+                description: "The role to add as a moderator",
+                required: true
+            }]
+        }, {
+            name: "moderator-remove",
+            type: 1,
+            description: "Remove a moderator role for your server's ticket panel",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "role",
+                type: 8,
+                description: "The role to remove from moderator role",
+                required: true
+            }]
+        }, {
+            name: "banned-add",
+            type: 1,
+            description: "Add a banned role for your server's ticket panel",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "role",
+                type: 8,
+                description: "The role to add as a banned",
+                required: true
+            }]
+        }, {
+            name: "banned-remove",
+            type: 1,
+            description: "Remove a banned role for your server's ticket panel",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "role",
+                type: 8,
+                description: "The role to remove from banned role",
+                required: true
+            }]
+        }, {
+            name: "max-ticket",
+            type: 1,
+            description: "Set maximum number of tickets a user can create in a pannel",
+            options: [{
+                name: "panel-name",
+                description: "The name of the panel",
+                type: 3,
+                required: true
+            }, {
+                name: "limit",
+                type: 4,
+                description: "The number of tickets a user can create",
+                required: true
+            }]
         }]
     },
     permissions: ["MANAGA_SERVER", "MANAGE_CHANNELS"],
@@ -60,8 +160,8 @@ module.exports = {
     run: async (client, interaction) => {
         await interaction.deferReply();
 
-        const command = interaction.options.getSubcommand(), name = interaction.options.getString("panel-name"), channel = interaction.options.getChannel("channel"),
-            data = await tickets.findOne({ guild: interaction.guildId, name });
+        const command = interaction.options.getSubcommand(), name = interaction.options.getString("panel-name"), channel = interaction.options.getChannel("channel"), role = interaction.options.getRole("role"), limit = interaction.options.getInteger("limit");
+        let data = await tickets.findOne({ guild: interaction.guildId, name });
 
         if (command === "create") {
             if (data) return interaction.editReply({ content: `You already have a panel with name \`${name}\`` });
@@ -86,10 +186,54 @@ module.exports = {
             }).catch(e => {
                 interaction.editReply({ content: `Unable to send the message in ${channel.toString()}` })
             })
+        } else if (command === "logs-disable") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { logs: "0" });
+            interaction.editReply({ content: "Successfully disabled Ticket logs for this server." });
+        } else if (command === "logs-enable") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+
+            if (channel.type !== "GUILD_TEXT") return interaction.editReply({ content: "Channel should be a text channel" });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { logs: channel.id });
+            interaction.editReply({ content: "Successfully enable Ticket logs for this server in " + channel.toString() });
+        } else if (command === "moderator-add") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+            if (data.moderators?.includes(role.id)) return interaction.editReply({ content: `This role is already a moderator role in the panel \`${data.name}\`` });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { $push: { moderators: role.id } });
+            interaction.editReply({ content: `Successfully added **${role.name}** as a moderator role in the panel \`${data.name}\`` });
+        } else if (command === "moderator-remove") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+            if (!data.moderators?.includes(role.id)) return interaction.editReply({ content: `This role is not a moderator role in the panel \`${data.name}\`` });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { $pull: { moderators: { $in: role.id } } });
+            interaction.editReply({ content: `Successfully remove **${role.name}** from moderator roles in the panel \`${data.name}\`` });
+        } else if (command === "banned-add") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+            if (data.banned?.includes(role.id)) return interaction.editReply({ content: `This role is already a banned role in the panel \`${data.name}\`` });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { $push: { banned: role.id } });
+            interaction.editReply({ content: `Successfully added **${role.name}** as a banned role in the panel \`${data.name}\`` });
+        } else if (command === "banned-remove") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+            if (!data.banned?.includes(role.id)) return interaction.editReply({ content: `This role is not a banned role in the panel \`${data.name}\`` });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { $pull: { banned: { $in: role.id } } });
+            interaction.editReply({ content: `Successfully remove **${role.name}** from banned roles in the panel \`${data.name}\`` });
+        } else if (command === "max-ticket") {
+            if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
+            if (limit < 1 || limit > 1000) return interaction.editReply({ content: "The maximum ticket limit can't be less than 1 or greater than 1000" });
+
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { max:limit });
+            interaction.editReply({ content: `Successfully setted maximum ticket limit to **${limit}** in the panel \`${data.name}\`` });
         } else {
             const ticketData = await ticket.findOne({ channel: interaction.channel.id });
 
             if (!ticketData) return interaction.editReply({ content: "This is not a ticket channel." });
+            data = await tickets.findOne({ name: ticketData.panel })
+
             const user = interaction.guild.members.cache.get(ticketData.user);
 
             if (command === "close") {
@@ -102,6 +246,34 @@ module.exports = {
                 await ticket.findOneAndUpdate({ channel: interaction.channel.id }, { closed: true });
 
                 interaction.editReply({ content: "This ticket is now closed" });
+
+                interaction.guild.channels.cache.get(data.logs)?.send({
+                    embeds: [{
+                        title: "Ticket closed",
+                        timestamps: Date.now(),
+                        fields: [{
+                            name: "Panel",
+                            value: data.name,
+                            inline: true
+                        }, {
+                            name: "User",
+                            value: user.user.username,
+                            inline: true
+                        }, {
+                            name: "Ticket",
+                            value: interaction.channel.toString(),
+                            inline: true
+                        }, {
+                            name: "\u200b",
+                            value: "\u200b",
+                            inline: true
+                        }, {
+                            name: "Moderator",
+                            value: interaction.user.username,
+                            inline: true
+                        }]
+                    }]
+                })
             } else if (command === "re-open") {
                 if (!ticketData.closed) return interaction.editReply({ content: "This ticket is not closed" });
                 interaction.channel.permissionOverwrites.create(user, {
@@ -112,6 +284,33 @@ module.exports = {
                 await ticket.findOneAndUpdate({ channel: interaction.channel.id }, { closed: false });
 
                 interaction.editReply({ content: "This ticket is now re-opened" });
+                interaction.guild.channels.cache.get(data.logs)?.send({
+                    embeds: [{
+                        title: "Ticket re-opened",
+                        timestamps: Date.now(),
+                        fields: [{
+                            name: "Panel",
+                            value: data.name,
+                            inline: true
+                        }, {
+                            name: "User",
+                            value: user.user.username,
+                            inline: true
+                        }, {
+                            name: "Ticket",
+                            value: interaction.channel.toString(),
+                            inline: true
+                        }, {
+                            name: "\u200b",
+                            value: "\u200b",
+                            inline: true
+                        }, {
+                            name: "Moderator",
+                            value: interaction.user.username,
+                            inline: true
+                        }]
+                    }]
+                })
             } else if (command === "delete") {
                 interaction.editReply({ content: "This ticket is closed and channel will be deleted in few seconds" });
                 await ticket.findOneAndDelete({ channel: interaction.channel.id });
@@ -119,6 +318,33 @@ module.exports = {
 
                 interaction.channel.delete().catch(e => {
                     interaction.editReply({ content: "Ticket was deleted from database but i was unable to delete this channel" });
+                })
+                interaction.guild.channels.cache.get(data.logs)?.send({
+                    embeds: [{
+                        title: "Ticket deleted",
+                        timestamps: Date.now(),
+                        fields: [{
+                            name: "Panel",
+                            value: data.name,
+                            inline: true
+                        }, {
+                            name: "User",
+                            value: user.user.username,
+                            inline: true
+                        }, {
+                            name: "Ticket",
+                            value: interaction.channel.toString(),
+                            inline: true
+                        }, {
+                            name: "\u200b",
+                            value: "\u200b",
+                            inline: true
+                        }, {
+                            name: "Moderator",
+                            value: interaction.user.username,
+                            inline: true
+                        }]
+                    }]
                 })
             }
         }
