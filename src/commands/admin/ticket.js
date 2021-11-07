@@ -1,6 +1,6 @@
 const tickets = require('../../models/tickets');
 const ticket = require('../../models/ticket');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton, CommandInteraction } = require('discord.js');
 
 module.exports = {
     data: {
@@ -155,13 +155,32 @@ module.exports = {
             }]
         }]
     },
-    permissions: ["MANAGA_SERVER", "MANAGE_CHANNELS"],
+    permissions: [],
 
+    /**
+     * 
+     * @param {*} client 
+     * @param {CommandInteraction} interaction 
+     * @returns 
+     */
     run: async (client, interaction) => {
         await interaction.deferReply();
 
-        const command = interaction.options.getSubcommand(), name = interaction.options.getString("panel-name"), channel = interaction.options.getChannel("channel"), role = interaction.options.getRole("role"), limit = interaction.options.getInteger("limit");
-        let data = await tickets.findOne({ guild: interaction.guildId, name });
+        const data = await tickets.findOne({ guild: interaction.guildId, name }) || await tickets.findOne({ name: ticketData.panel }),
+            command = interaction.options.getSubcommand(),
+            name = interaction.options.getString("panel-name"),
+            channel = interaction.options.getChannel("channel"),
+            role = interaction.options.getRole("role"),
+            limit = interaction.options.getInteger("limit"),
+            modCommands = ["close", "reopen", "delete"],
+            permissions = ["MANAGA_SERVER", "MANAGE_CHANNELS"],
+            member = interaction.guild.members.cache.get(ticketData.user);
+
+        if (modCommands.includes(command) && !data?.moderators.some(v => member.roles.cache.has(v)) && !permissions.some(v => member.permissions.has(v)))
+            return interaction.editReply({ content: `You can not use this command, because you neither have moderator role for this pannel nor any of the following permission ${permissions.join(", ")}` })
+
+        if (!modCommands.includes(command) && !permissions.some(v => member.permissions.has(v)))
+            return interaction.editReply({ content: `You can not use this command, because you do not have any of the following permission ${permissions.join(", ")}` })
 
         if (command === "create") {
             if (data) return interaction.editReply({ content: `You already have a panel with name \`${name}\`` });
@@ -226,15 +245,12 @@ module.exports = {
             if (!data) return interaction.editReply({ content: `You do not have a panel with name \`${name}\`` });
             if (limit < 1 || limit > 1000) return interaction.editReply({ content: "The maximum ticket limit can't be less than 1 or greater than 1000" });
 
-            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { max:limit });
+            await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { max: limit });
             interaction.editReply({ content: `Successfully setted maximum ticket limit to **${limit}** in the panel \`${data.name}\`` });
         } else {
             const ticketData = await ticket.findOne({ channel: interaction.channel.id });
 
             if (!ticketData) return interaction.editReply({ content: "This is not a ticket channel." });
-            data = await tickets.findOne({ name: ticketData.panel })
-
-            const user = interaction.guild.members.cache.get(ticketData.user);
 
             if (command === "close") {
                 if (ticketData.closed) return interaction.editReply({ content: "This ticket is already closed" });
@@ -257,7 +273,7 @@ module.exports = {
                             inline: true
                         }, {
                             name: "User",
-                            value: user.user.username,
+                            value: member.user.username,
                             inline: true
                         }, {
                             name: "Ticket",
@@ -294,7 +310,7 @@ module.exports = {
                             inline: true
                         }, {
                             name: "User",
-                            value: user.user.username,
+                            value: member.user.username,
                             inline: true
                         }, {
                             name: "Ticket",
@@ -329,7 +345,7 @@ module.exports = {
                             inline: true
                         }, {
                             name: "User",
-                            value: user.user.username,
+                            value: member.user.username,
                             inline: true
                         }, {
                             name: "Ticket",
