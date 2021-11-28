@@ -2,10 +2,10 @@ const tickets = require('../models/tickets');
 const ticket = require('../models/ticket');
 
 module.exports = async (client, interaction) => {
-    if (!interaction.isButton()) return;
+    if (!interaction.isButton() || !interaction.guild) return;
 
     const data = await tickets.findOne({ guild: interaction.guildId, message: interaction.message.id }),
-        member = interaction.guild.members.cache.get(interaction.user.id), user_tickets = await ticket.find({ panel: data.name, user: interaction.user.id, closed:false }).lean();
+        member = interaction.guild.members.cache.get(interaction.user.id), user_tickets = await ticket.find({ panel: data.name, user: interaction.user.id, closed: false }).lean();
 
     if (!data) return;
 

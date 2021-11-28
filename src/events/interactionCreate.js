@@ -1,5 +1,5 @@
 module.exports = async (client, interaction) => {
-    if (!interaction.isCommand() && !interaction.isContextMenu()) return;
+    if (!interaction.isCommand() && !interaction.isContextMenu()  || !interaction.guild) return;
 
     try {
         const command = client.commands.get(interaction.commandName), member = interaction.guild.members.cache.get(interaction.member.id);

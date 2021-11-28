@@ -1,7 +1,7 @@
 const reactionRole = require("../models/reactionRole");
 
 module.exports = async (client, interaction) => {
-    if (!interaction.isButton()) return;
+    if (!interaction.isButton()  || !interaction.guild) return;
 
     const emoji = interaction?.component?.emoji;
 
