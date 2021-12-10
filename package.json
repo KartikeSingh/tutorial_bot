@@ -7,18 +7,19 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Shisui",
   "license": "ISC",
   "dependencies": {
     "canvacord": "^5.2.3",
     "canvas": "^2.8.0",
     "discord-canvas": "^1.4.1",
     "discord-fight-game": "^1.0.1",
-    "discord-purger": "^1.0.1",
+    "discord-purger": "^1.0.2",
     "discord-rock-paper-scissor": "^1.1.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "mongoose": "^6.0.9",
+    "ms-prettify": "^1.2.1",
     "pokecord": "^1.0.1"
   }
 }
