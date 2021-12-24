@@ -25,7 +25,11 @@ const guildStats = new Schema({
             type: String,
             default: "Welcome {mention}, To **{server}**\nNow we are a family of {members}"
         }
-    }
+    },
+
+    ignoreXP: [String],
+    xp: Boolean,
+    xpTimeout: Number,
 })
 
 module.exports = model("Guild_Config", guildStats);
