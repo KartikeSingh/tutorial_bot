@@ -28,8 +28,42 @@ const guildStats = new Schema({
     },
 
     ignoreXP: [String],
-    xp: Boolean,
-    xpTimeout: Number,
+    xp: {
+        type: Boolean,
+        default: false
+    },
+    xpTimeout: {
+        type: Number,
+        default: 60000
+    },
+    xpLevelUp: {
+        message: {
+            type: String,
+            default: "Congrats {mention} 🎉 on reaching {level} level"
+        },
+        channel: {
+            type: String,
+            default: "0"
+        },
+        enable: {
+            type: Boolean,
+            default: true
+        }
+    },
+    xpRate: {
+        type: Number,
+        default: 1
+    },
+    xpLimit: {
+        up: {
+            type: Number,
+            default: 20
+        },
+        down: {
+            type: Number,
+            default: 5
+        },
+    }
 })
 
 module.exports = model("Guild_Config", guildStats);
