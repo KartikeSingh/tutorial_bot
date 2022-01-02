@@ -63,7 +63,14 @@ const guildStats = new Schema({
             type: Number,
             default: 5
         },
-    }
+    },
+    tags: [{
+        name: String,
+        response: String,
+        embed: Boolean,
+        case: Boolean,
+        include: Boolean,
+    }]
 })
 
 module.exports = model("Guild_Config", guildStats);

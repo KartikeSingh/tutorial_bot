@@ -155,7 +155,7 @@ module.exports = {
             }]
         }]
     },
-    permissions: [],
+    permissions: ["MANAGE_SERVER"],
 
     /**
      * 
