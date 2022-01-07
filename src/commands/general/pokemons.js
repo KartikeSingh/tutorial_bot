@@ -14,16 +14,18 @@ module.exports = {
     },
 
     run: async (client, interaction) => {
+        await interaction.deferReply();
+        
         const user = interaction.options.getUser("user") || interaction.user;
         const data = await userConfig.findOne({ user: user.id }) || await userConfig.create({ user: user.id });
-        let pokemons = "";
+        let pokemons = "ID\tPokemon";
 
         for (let i = 0; i < data.pokemons.length; i++) {
             const v = data.pokemons[i];
-            pokemons += `${i + 1}. ${(await pokecord.Spawn(v)).name}\n`
+            pokemons += `${i}. ${(await pokecord.Spawn(v)).name}\n`
         }
 
-        interaction.reply({
+        interaction.editReply({
             embeds: [{
                 title: `${user.username}'s Pokemon's`,
                 description: pokemons

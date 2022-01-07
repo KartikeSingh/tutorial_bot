@@ -14,6 +14,8 @@ module.exports = async (client, message) => {
 
     if (data.pokemon.points < data.pokemon.afterPoints) return guildConfigs.findOneAndUpdate({ id: message.guild.id }, { "pokemon.points": data.pokemon.points });
 
+    await guildConfigs.findOneAndUpdate({ id: message.guild.id }, { "pokemon.points": 0 });
+
     const pokemon = await pokecord.Spawn();
 
     const channel = message.guild.channels.cache.get(data.pokemon.spawnAt) || message.channel;
