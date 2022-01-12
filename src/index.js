@@ -23,7 +23,12 @@ client.owners = ["441943765855240192"];
 
 // Event handler
 readdirSync(join(__dirname, "./events")).forEach(file => {
-    client.on(file.split(".")[0], (...args) => require(`./events/${file}`)(client, ...args));
+    const f = require(`./events/${file}`);
+    console.log(f);
+
+    if (typeof (f) != "function") return;
+    
+    client.on(file.split(".")[0], (...args) => f(client, ...args));
 });
 
 // Command Handler

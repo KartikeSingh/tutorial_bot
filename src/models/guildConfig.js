@@ -70,7 +70,25 @@ const guildStats = new Schema({
         embed: Boolean,
         case: Boolean,
         include: Boolean,
-    }]
+    }],
+    levelRewardMessage: {
+        success: {
+            type: String,
+            default: "Congrats {mention} 🎉 on reaching {level} level, and you got **{role}** role as a reward 🎉"
+        },
+        fail: {
+            type: String,
+            default: "Congrats {mention} 🎉 on reaching {level} level, you were supposed to get **{role}** role as a reward but I was unable to give you the role"
+        },
+    },
+    levelReward: Object
+    /**
+     levelReward = {
+         "1": "roleid-1",
+         2: "another-id"
+         // etc
+     }
+     */
 })
 
 module.exports = model("Guild_Config", guildStats);

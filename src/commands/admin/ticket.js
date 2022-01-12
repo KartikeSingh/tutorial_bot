@@ -166,9 +166,10 @@ module.exports = {
     run: async (client, interaction) => {
         await interaction.deferReply();
 
-        const data = await tickets.findOne({ guild: interaction.guildId, name }) || await tickets.findOne({ name: ticketData.panel }),
+        const name = interaction.options.getString("panel-name"),
+            ticketData = await ticket.findOne({ channel: interaction.channel.id }),
+            data = await tickets.findOne({ guild: interaction.guildId, name }) || await tickets.findOne({ name: ticketData.panel }),
             command = interaction.options.getSubcommand(),
-            name = interaction.options.getString("panel-name"),
             channel = interaction.options.getChannel("channel"),
             role = interaction.options.getRole("role"),
             limit = interaction.options.getInteger("limit"),
@@ -248,8 +249,6 @@ module.exports = {
             await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { max: limit });
             interaction.editReply({ content: `Successfully setted maximum ticket limit to **${limit}** in the panel \`${data.name}\`` });
         } else {
-            const ticketData = await ticket.findOne({ channel: interaction.channel.id });
-
             if (!ticketData) return interaction.editReply({ content: "This is not a ticket channel." });
 
             if (command === "close") {
