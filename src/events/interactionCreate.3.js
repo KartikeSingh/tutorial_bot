@@ -3,9 +3,9 @@ const ticket = require('../models/ticket');
 
 module.exports = async (client, interaction) => {
     if (!interaction.isButton() || !interaction.guild) return;
-    
-    const data = await tickets.findOne({ guild: interaction.guildId, message: interaction.message.id }) || {},
-        member = interaction.member;
+
+    const data = await tickets.findOne({ guild: interaction.guildId, message: interaction.message.id });
+    member = interaction.member;
 
     if (!data) return;
 
