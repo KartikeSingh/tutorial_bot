@@ -167,20 +167,20 @@ module.exports = {
         await interaction.deferReply();
 
         const name = interaction.options.getString("panel-name"),
-            ticketData = await ticket.findOne({ channel: interaction.channel.id }),
-            data = await tickets.findOne({ guild: interaction.guildId, name }) || await tickets.findOne({ name: ticketData.panel }),
+            ticketData = await ticket.findOne({ guild: interaction.guildId, channel: interaction.channel.id }) || {},
+            data = await tickets.findOne({ guild: interaction.guildId, name }) || await tickets.findOne({ guild: interaction.guildId, name: ticketData.panel }),
             command = interaction.options.getSubcommand(),
             channel = interaction.options.getChannel("channel"),
             role = interaction.options.getRole("role"),
             limit = interaction.options.getInteger("limit"),
             modCommands = ["close", "reopen", "delete"],
             permissions = ["MANAGA_SERVER", "MANAGE_CHANNELS"],
-            member = interaction.guild.members.cache.get(ticketData.user);
+            member = interaction.guild.members.cache.get(ticketData?.user);
 
-        if (modCommands.includes(command) && !data?.moderators.some(v => member.roles.cache.has(v)) && !permissions.some(v => member.permissions.has(v)))
+        if (modCommands.includes(command) && !data?.moderators.some(v => interaction.member.roles.cache.has(v)) && !permissions.some(v => interaction.member.permissions.has(v)))
             return interaction.editReply({ content: `You can not use this command, because you neither have moderator role for this pannel nor any of the following permission ${permissions.join(", ")}` })
 
-        if (!modCommands.includes(command) && !permissions.some(v => member.permissions.has(v)))
+        if (!modCommands.includes(command) && !permissions.some(v => interaction.member.permissions.has(v)))
             return interaction.editReply({ content: `You can not use this command, because you do not have any of the following permission ${permissions.join(", ")}` })
 
         if (command === "create") {
@@ -201,6 +201,7 @@ module.exports = {
             const row = new MessageActionRow().addComponents(new MessageButton().setCustomId("ticket_button").setLabel("Create Ticket").setEmoji("📩").setStyle("PRIMARY"));
 
             channel?.send({ embeds: [embed], components: [row] }).then(async v => {
+                console.log(v)
                 await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { message: v.id });
                 interaction.editReply({ content: `Successfully started the panel with name : \`${name}\` in ${channel.toString()}` })
             }).catch(e => {
@@ -249,7 +250,9 @@ module.exports = {
             await tickets.findOneAndUpdate({ guild: interaction.guildId, name }, { max: limit });
             interaction.editReply({ content: `Successfully setted maximum ticket limit to **${limit}** in the panel \`${data.name}\`` });
         } else {
-            if (!ticketData) return interaction.editReply({ content: "This is not a ticket channel." });
+            if (!ticketData || !ticketData.panel) return interaction.editReply({ content: "This is not a ticket channel." });
+
+            let user = interaction.guild.members.cache.get(ticketData?.user);
 
             if (command === "close") {
                 if (ticketData.closed) return interaction.editReply({ content: "This ticket is already closed" });

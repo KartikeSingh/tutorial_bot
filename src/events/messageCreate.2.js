@@ -22,14 +22,14 @@ module.exports = async (client, message) => {
         const r = data.levelReward[userData.level], role = message.guild.roles.cache.get(r),
             channel = message.guild.channels.cache.get(data.xpLevelUp.channel) || message.channel;
 
-        if (r || role) {
+        if (r !==undefined) {
             message.member.roles.add(role, `Level reward for reaching ${userData.level} level`).then(() => {
                 reply(data.levelRewardMessage.success, channel, message, userData, data, role)
             }).catch(() => {
                 reply(data.levelRewardMessage.fail, channel, message, userData, data, role);
             })
         } else {
-            reply(data.levelRewardMessage.fail, channel, message, userData, data);
+            reply(data.xpLevelUp.message, channel, message, userData, data);
         }
     }
 
@@ -41,7 +41,6 @@ module.exports = async (client, message) => {
 }
 
 function reply(content, channel, message, userData, data, role) {
-    console.log(role)
     if (!data.xpLevelUp.enable) return;
 
     channel.send({ content: content.replace(/{mention}/g, message.author.toString()).replace(/{level}/, userData.level).replace(/{xp}/, userData.xp).replace(/{role}/, role?.name) });

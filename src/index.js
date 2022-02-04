@@ -22,14 +22,9 @@ client.categories = readdirSync(join(__dirname, "./commands"));
 client.owners = ["441943765855240192"];
 
 // Event handler
-readdirSync(join(__dirname, "./events")).forEach(file => {
-    const f = require(`./events/${file}`);
-    console.log(f);
-
-    if (typeof (f) != "function") return;
-    
-    client.on(file.split(".")[0], (...args) => f(client, ...args));
-});
+readdirSync(join(__dirname, "./events")).forEach(file =>
+    client.on(file.split(".")[0], (...args) => require(`./events/${file}`)(client, ...args))
+);
 
 // Command Handler
 for (let i = 0; i < client.categories.length; i++) {
@@ -38,7 +33,7 @@ for (let i = 0; i < client.categories.length; i++) {
     for (let j = 0; j < commands.length; j++) {
         const command = require(`./commands/${client.categories[i]}/${commands[j]}`);
         if (!command || !command?.data?.name || typeof (command?.run) !== "function") continue;
-
+        command.category = client.categories[i];
         client.commands.set(command.data.name, command);
     }
 }
