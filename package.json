@@ -23,7 +23,7 @@
     "ebay-rss": "^1.0.4",
     "fast-xml-parser": "^4.0.0-beta.8",
     "flexsearch": "^0.7.21",
-    "mongoose": "^6.0.9",
+    "mongoose": "^6.2.0",
     "ms-prettify": "^1.2.1",
     "node-fetch": "^2.6.6",
     "pokecord": "^1.0.1"

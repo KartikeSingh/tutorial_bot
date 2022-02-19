@@ -11,7 +11,6 @@ module.exports = async (client, interaction) => {
 
     const user_tickets = await ticket.find({ panel: data.name, user: interaction.user.id, closed: false }).lean();
 
-
     if (data.banned.some(v => member.roles.cache.has(v))) return interaction.reply({ content: "You are banned from the panel", ephemeral: true });
     if (user_tickets.length >= data.max) return interaction.reply({ content: "You already made maximum tickets `(" + data.max + ")` you are allowed to make in this panel", ephemeral: true });
 

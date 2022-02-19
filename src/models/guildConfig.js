@@ -81,7 +81,7 @@ const guildStats = new Schema({
             default: "Congrats {mention} 🎉 on reaching {level} level, you were supposed to get **{role}** role as a reward but I was unable to give you the role"
         },
     },
-    levelReward: Object
+    levelReward: Object,
     /**
      levelReward = {
          "1": "roleid-1",
@@ -89,6 +89,17 @@ const guildStats = new Schema({
          // etc
      }
      */
+    leave: {
+        enable: {
+            type: Boolean,
+            default: false
+        },
+        channel: String,
+        message: {
+            type: String,
+            default: `**{user}** left the server.`
+        }
+    }
 })
 
 module.exports = model("Guild_Config", guildStats);
