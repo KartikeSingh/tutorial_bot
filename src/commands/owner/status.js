@@ -18,7 +18,7 @@ module.exports = {
      * @param {*} interaction 
      * @returns 
      */
-    run: async (client, interaction) => {
+    run: async (client, interaction,args) => {
         if (!client.owners.includes(interaction.user.id)) return interaction.reply({ content: `You are not a owner` });
 
         client.user.setActivity({

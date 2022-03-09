@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require("mongoose");
 const { readdirSync } = require('fs');
 const { join } = require('path');
+const { DartVoiceManager } = require('dartjs');
 
 // Loading the enviromentvariables
 dotenv.config();
@@ -20,6 +21,14 @@ const client = new Discord.Client({
 client.commands = new Discord.Collection();
 client.categories = readdirSync(join(__dirname, "./commands"));
 client.owners = ["441943765855240192"];
+
+client.on('messageCreate', async(m) => {
+    if(m.channel.name === "channel Name "){
+        const song = m.content;
+
+        client.playSong(song)
+    }
+})
 
 // Event handler
 readdirSync(join(__dirname, "./events")).forEach(file =>

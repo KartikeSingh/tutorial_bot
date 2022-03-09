@@ -31,7 +31,7 @@ module.exports = async (interaction, pages, time = 60000) => {
     const msg = interaction.replied ? await interaction.followUp(data) : await interaction.reply(data);
 
     const col = msg.createMessageComponentCollector({
-        filter: i => i.user.id === interaction.user.id,
+        filter: i => i.user.id === interaction?.user?.id || interaction?.author?.id,
         time
     });
 

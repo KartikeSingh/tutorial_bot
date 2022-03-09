@@ -4,7 +4,7 @@ const startTimer = require('../utility/startTimer');
 module.exports = async (client) => {
     console.log("Client is up");
 // 926705336675631195
-    client.application.commands.set([...client.commands.map(v => v.data)], "732883841395720213");
+    client.application.commands.set([...client.commands.map(v => v.data)], "932670781006172200");
 
     // Reloading the timers
     const data = await timers.find();

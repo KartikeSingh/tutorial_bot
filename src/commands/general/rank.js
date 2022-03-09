@@ -36,7 +36,6 @@ module.exports = {
 
         for (let i = 1; i <= data.level; i++)reqXP += 5 * (i ^ 2) + (50 * i) + 100;
 
-
         const canvas = createCanvas(1000, 300),
             ctx = canvas.getContext('2d'),
             bar_width = 600,

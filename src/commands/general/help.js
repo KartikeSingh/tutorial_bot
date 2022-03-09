@@ -139,7 +139,7 @@ module.exports = {
             pagination(interaction, embeds);
         } else if (option === "command") {
             interaction.reply({
-                embeds: [commandInfo(client.commands.get(interaction.option.getString("command")?.toLowerCase()))]
+                embeds: [commandInfo(client.commands.get(interaction.options.getString("command")?.toLowerCase()))]
             })
         }
     }
