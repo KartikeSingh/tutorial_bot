@@ -1,5 +1,6 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 
+// NOTE: create a file called tommy.ttf in main folder of your bot and you can download file from here: https://github.com/KartikeSingh/tutorial_bot/blob/master/tommy.ttf
 registerFont("./tommy.ttf", {
     family: "tommy"
 });
