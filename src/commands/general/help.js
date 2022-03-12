@@ -1,4 +1,4 @@
-const { MessageActionRow } = require('discord.js');
+const { MessageActionRow, CommandInteraction } = require('discord.js');
 const commandInfo = require('../../utility/commandInfo');
 const pagination = require('../../utility/pagination');
 
@@ -33,6 +33,11 @@ module.exports = {
         }]
     },
 
+    /**
+     * 
+     * @param {*} client 
+     * @param {CommandInteraction} interaction 
+     */
     run: async (client, interaction) => {
         const option = interaction.options.getSubcommand();
 

@@ -1,4 +1,7 @@
-const STRING = "QWERTYUIOPASDFGHJKLZXCVBNM", STRING2 = STRING.toLowerCase(), NUMBER = "1234567890", chars = STRING + STRING2 + NUMBER;
+const STRING = "QWERTYUIOPASDFGHJKLZXCVBNM",
+    STRING2 = STRING.toLowerCase(),
+    NUMBER = "1234567890",
+    chars = STRING + STRING2 + NUMBER;
 
 module.exports = (length = 12) => {
     let pass = "";
