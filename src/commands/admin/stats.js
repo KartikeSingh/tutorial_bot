@@ -21,7 +21,7 @@ module.exports = {
             description: "The voice channel in which you wanna show the stats"
         }]
     },
-    permissions: ["MANAGE_SERVER", "MANAGE_CHANNELS"],
+    permissions: ["MANAGE_GUILD", "MANAGE_CHANNELS"],
 
     /**
      * 

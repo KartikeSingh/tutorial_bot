@@ -2,7 +2,8 @@ const ms = require('ms-prettify').default;
 
 module.exports = async (client, interaction) => {
     try {
-        interaction.isCommand()
+        if (!interaction.isCommand()) return;
+
         const command = client.commands.get(interaction.commandName), member = interaction.guild.members.cache.get(interaction.member.id);
 
         if (!command || (!command.dm && !interaction.guild)) return;
