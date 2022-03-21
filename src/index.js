@@ -20,7 +20,7 @@ const client = new Discord.Client({
 client.timeouts = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.categories = readdirSync(join(__dirname, "./commands"));
-client.owners = ["441943765855240192"];
+client.owners = ["441943765855240192", "723049421021118535"];
 
 // Event handler
 readdirSync(join(__dirname, "./events")).forEach(file =>

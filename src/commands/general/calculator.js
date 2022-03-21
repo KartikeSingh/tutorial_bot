@@ -157,7 +157,7 @@ module.exports = {
                     (parseInt(i.customId) == i.customId || i.customId === ".")
                     &&
                     (lc == parseInt(lc) || lc === ".")
-                ) ? "" : " "}` + i.customId;
+                ) || data.length === 0 ? "" : " "}` + i.customId;
             }
 
             i.update({
