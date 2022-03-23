@@ -140,14 +140,18 @@ module.exports = {
         });
 
         col.on('collect', async (i) => {
+            let extra = "";
+
             if (i.customId === "result") {
                 try {
                     data = math.evaluate(data).toString();
                 } catch (e) {
-                    data = "An Error Occured, Please click on AC for restart"
+                    data = "";
+                    extra = "An Error Occured, Please click on AC for restart";
                 }
             } else if (i.customId === "clear") {
                 data = "";
+                extra = "Results will be displayed here"
             } else if (i.customId === "backspace") {
                 data = data.slice(0, data.length - 2);
             } else {
@@ -163,7 +167,7 @@ module.exports = {
             i.update({
                 embeds: [{
                     color: "BLUE",
-                    description: `\`\`\`\n${data}\n\`\`\``
+                    description: `\`\`\`\n${data || extra}\n\`\`\``
                 }]
             })
         })
