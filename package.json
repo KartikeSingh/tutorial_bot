@@ -29,6 +29,7 @@
     "node-emoji": "^1.11.0",
     "node-fetch": "^2.6.6",
     "pokecord": "^1.0.1",
-    "puppeteer": "^13.5.1"
+    "puppeteer": "^13.5.1",
+    "twitter": "^1.7.1"
   }
 }

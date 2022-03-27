@@ -33,6 +33,7 @@ module.exports = async (client, interaction) => {
     });
 
     interaction.reply({ content: "ticket is created successfully", ephemeral: true });
+
     channel.send({ content: `${interaction.user.toString()}, stay patient staff will be arving soon.` });
 
     interaction.guild.channels.cache.get(data.logs)?.send({
