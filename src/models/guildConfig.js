@@ -99,7 +99,8 @@ const guildStats = new Schema({
             type: String,
             default: `**{user}** left the server.`
         }
-    }
+    },
+    suggestion:String
 })
 
 module.exports = model("Guild_Config", guildStats);
