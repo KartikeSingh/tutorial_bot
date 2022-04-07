@@ -46,6 +46,8 @@ module.exports = async (client, message) => {
 
         msg.reply(`You successfully caught \`${pokemon.name}\` pokemon`);
     }).catch(() => {
+        catched = true;
+
         embed.setTitle("Pokemon ran away")
             .setImage(pokemon.imageURL)
         msg.edit({ embeds: [embed] });
@@ -54,13 +56,14 @@ module.exports = async (client, message) => {
     const col = new MessageCollector(message.channel, { filter: (m) => m.content.toLowerCase() === `${p}h` || m.content.toLowerCase() === `${p}hint`, time: 55000 })
 
     let t = 0;
+
     col.on('collect', (msg) => {
         if (catched) return col.stop();
 
         if (Date.now() - t < 10000) return msg.reply("You are on a timeout to use the hint command");
         t = Date.now();
 
-        let hint = pokemon.name, i = pokmeon.name.length / 2;
+        let hint = pokemon.name, i = pokemon.name.length / 2;
 
         while (--i >= 0) {
             let p = Math.floor(Math.random() * pokemon.length);

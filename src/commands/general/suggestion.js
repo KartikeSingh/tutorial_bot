@@ -122,7 +122,7 @@ module.exports = {
                 channel: c.id,
                 guild: interaction.guildId,
                 votes: {
-                    up: 0, down: 0
+                    up: [], down: []
                 },
                 createdAt: Date.now(),
             });

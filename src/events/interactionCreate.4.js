@@ -29,7 +29,7 @@ module.exports = async (client, interaction) => {
     if (!msg) return;
 
     msg.embeds[0].fields[0].value = (sug.votes.up.length - 1).toString();
-    msg.embeds[0].fields[1].value = (sug.votes.down.length - 1  ).toString();
+    msg.embeds[0].fields[1].value = (sug.votes.down.length - 1).toString();
 
     msg?.edit({
         embeds: msg.embeds

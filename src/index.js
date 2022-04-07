@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const { readdirSync } = require('fs');
 const { join } = require('path');
 
-// Loading the enviromentvariables
+// Loading the enviroment variables
 dotenv.config();
 
 // Connecting to mongoose
