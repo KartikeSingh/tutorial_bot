@@ -39,8 +39,8 @@ module.exports = async (client, interaction) => {
     m.edit({
         components: m.components.map(row => {
             row.components = row.components?.map(v => {
-                v.emoji = v.customId
                 v.label = `${pol.votes[v.customId] || 0}`;
+
                 return v;
             });
 

@@ -1,6 +1,6 @@
 const { find } = require('node-emoji');
 const polls = require("../../models/polls")
-const { MessageCollector, ReactionCollector, MessageButton, MessageActionRow } = require('discord.js');
+const { MessageButton, MessageActionRow } = require('discord.js');
 
 module.exports = {
     data: {

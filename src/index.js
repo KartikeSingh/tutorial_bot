@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const { readdirSync } = require('fs');
 const { join } = require('path');
 
+const {MessageButton} = require('discord.js');
+
 // Loading the enviroment variables
 dotenv.config();
 

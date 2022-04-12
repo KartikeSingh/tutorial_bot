@@ -17,7 +17,7 @@
     "discord-fight-game": "^1.0.1",
     "discord-purger": "^1.0.2",
     "discord-rock-paper-scissor": "^1.1.1",
-    "discord.js": "^13.1.0",
+    "discord.js": "^13.6.0",
     "dotenv": "^10.0.0",
     "eris": "^0.16.1",
     "express": "^4.17.3",
