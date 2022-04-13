@@ -83,6 +83,10 @@ module.exports = {
                 type: 3,
                 required: true
             }]
+        }, {
+            name: 'list',
+            type: 1,
+            description: "Get the list of badges"
         }]
     },
 
@@ -132,7 +136,7 @@ module.exports = {
                         inline: true
                     }, {
                         name: "Created At",
-                        value: new Date(badge.createdAt)?.toString() || "Unknown Date",
+                        value: `<t:${badge.createdAt}>`,
                         inline: true
                     }]
                 }]
@@ -178,7 +182,7 @@ module.exports = {
                         inline: true
                     }, {
                         name: "Created At",
-                        value: new Date(badge.createdAt)?.toString() || "Unknown Date",
+                        value: `<t:${badge.createdAt}>` || "Unknown Date",
                         inline: true
                     }]
                 }]
@@ -258,6 +262,30 @@ module.exports = {
                     description: `Successfully took **${badge.name}** from **${user.username}**`
                 }]
             });
+        } else if (option === "list") {
+            const badg = await badges.find();
+
+            if (badg.length === 0) return interaction.editReply({
+                embeds: [{
+                    title: "This Bot Do Not Have Badges",
+                    color: "RED"
+                }]
+            })
+
+            let str = "";
+
+            for (let i = 0; i < badg.length; i++) {
+                const bg = badg[i];
+
+                str += `${client.emojis.cache.get(bg?.emoji)?.toString() || bg?.emoji} **${bg?.name}** | Created At: <t:${bg.createdAt}>\n`
+            }
+
+            interaction.editReply({
+                embeds: [{
+                    title: "Badges Of The Bot",
+                    description: str
+                }]
+            })
         }
     }
 }

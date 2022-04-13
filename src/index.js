@@ -2,10 +2,14 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const mongoose = require("mongoose");
+const app = (require('express'))();
 const { readdirSync } = require('fs');
 const { join } = require('path');
 
-const {MessageButton} = require('discord.js');
+// Hosting
+app.get('/', (r, res) => res.sendStatus(200));
+
+app.listen(process.env.PORT || 3000);
 
 // Loading the enviroment variables
 dotenv.config();

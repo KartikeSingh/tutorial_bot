@@ -26,6 +26,7 @@
     "mathjs": "^10.4.0",
     "mongoose": "^6.2.0",
     "ms-prettify": "^1.2.1",
+    "node-canvas-with-twemoji-and-discord-emoji": "^1.2.1",
     "node-emoji": "^1.11.0",
     "node-fetch": "^2.6.6",
     "pokecord": "^1.0.1",

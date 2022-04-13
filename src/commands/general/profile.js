@@ -1,5 +1,7 @@
+const { MessageAttachment } = require("discord.js");
 const badge = require("../../models/badge")
-const userConfig = require("../../models/userConfig")
+const userConfig = require("../../models/userConfig");
+const createProfile = require("../../utility/createProfile");
 
 module.exports = {
     data: {
@@ -19,21 +21,24 @@ module.exports = {
         const user = interaction.options.getUser("user") || interaction.user,
             u = await userConfig.findOne({ user: user.id }) || await userConfig.create({ user: user.id });
 
-        let str = "";
+        let badges = [];
 
         for (let i = 0; i < u.badges.length; i++) {
             const bg = await badge.findOne({ id: u.badges[i] });
-            
+
             if (!bg) continue;
 
-            str += `${client.emojis.cache.get(bg?.emoji)?.toString() || bg?.emoji} **${bg?.name}**\n`
+            badges.push(client.emojis.cache.get(bg?.emoji)?.toString() || bg?.emoji);
         }
 
         interaction.editReply({
             embeds: [{
                 title: `${user.username}'s profile`,
-                description: `${str?.length < 1 ? "This user do not have badges" : str}`
-            }]
+                image: {
+                    url: 'attachment://profile.png'
+                }
+            }],
+            files: [new MessageAttachment(await createProfile(user.username, user.displayAvatarURL({ format: 'png' }), badges ), "profile.png")]
         });
     }
 }
