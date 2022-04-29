@@ -18,6 +18,7 @@ module.exports = async (client, message) => {
 
     if (userData.xp >= reqXP) {
         userData.level += 1;
+        data.levelReward = data.levelReward || {};
 
         const r = data.levelReward[userData.level], role = message.guild.roles.cache.get(r),
             channel = message.guild.channels.cache.get(data.xpLevelUp.channel) || message.channel;
